@@ -49,6 +49,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+public function getAuthIdentifierName()
+{
+    return 'username';
+}
 
       public function siswa()
     {
@@ -60,9 +64,4 @@ class User extends Authenticatable
         return $this->hasOne(Guru::class);
     }
 
-    // Helper password
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = Hash::make($value);
-    }
 }

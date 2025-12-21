@@ -1,37 +1,62 @@
 @extends('layouts.app')
 
+@section('title', 'Data Guru')
+
 @section('content')
-<h4>Data Guru</h4>
+<div class="container mx-auto px-4 py-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Data Guru</h1>
+        <a href="{{ route('guru.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+            Tambah Guru
+        </a>
+    </div>
 
-<a href="/admin/guru/create" class="btn btn-primary mb-3">Tambah Guru</a>
+    <!-- @if(session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif -->
 
-@if(session('success'))
-<div class="alert alert-success">{{ session('success') }}</div>
-@endif
-
-<table class="table table-bordered">
-    <tr>
-        <th>NIP</th>
-        <th>Nama</th>
-        <th>Mapel</th>
-        <th>Username</th>
-        <th>Aksi</th>
-    </tr>
-
-    @foreach($guru as $g)
-    <tr>
-        <td>{{ $g->nip }}</td>
-        <td>{{ $g->nama }}</td>
-        <td>{{ $g->mapel }}</td>
-        <td>{{ $g->user->username }}</td>
-        <td>
-            <form method="POST" action="/admin/guru/{{ $g->id }}">
-                @csrf
-                @method('DELETE')
-                <button class="btn btn-danger btn-sm">Hapus</button>
-            </form>
-        </td>
-    </tr>
-    @endforeach
-</table>
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">No</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">NIP</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Mata Pelajaran</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Username</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @forelse($guru as $index => $guru)
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $index + 1 }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $guru->nip }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $guru->nama }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $guru->mapel }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ $guru->user->username }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <form action="{{ route('guru.destroy', $guru->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 hover:text-red-900" 
+                                        onclick="return confirm('Yakin ingin menghapus?')">
+                                    Hapus
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                            Belum ada data guru
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
 @endsection

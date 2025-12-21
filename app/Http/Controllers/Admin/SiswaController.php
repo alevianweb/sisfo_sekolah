@@ -52,4 +52,27 @@ class SiswaController extends Controller
         $siswa->user()->delete(); // otomatis hapus siswa
         return back()->with('success', 'Siswa dihapus');
     }
+
+    public function edit($id)
+    {
+        $siswa = Siswa::findOrFail($id);
+        return view('admin.siswa.edit', compact('siswa'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $siswa = Siswa::findOrFail($id);
+
+        $request->validate([
+            'nis' => 'required',
+            'nama' => 'required',
+            'kelas' => 'required',
+        ]);
+
+        $siswa->update($request->all());
+
+        return redirect()->route('siswa.index')
+            ->with('success', 'Data siswa berhasil diperbarui');
+    }
+
 }
